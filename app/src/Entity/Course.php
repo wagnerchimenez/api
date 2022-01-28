@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Interfaces\EntityInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -42,6 +44,16 @@ class Course implements EntityInterface, JsonSerializable
      * @Assert\Date()
      */
     private $end_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CourseRegistration::class, mappedBy="course")
+     */
+    private $courseRegistrations;
+
+    public function __construct()
+    {
+        $this->courseRegistrations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -92,6 +104,36 @@ class Course implements EntityInterface, JsonSerializable
     public function setEndDate(\DateTimeInterface $end_date): self
     {
         $this->end_date = $end_date;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CourseRegistration[]
+     */
+    public function getCourseRegistrations(): Collection
+    {
+        return $this->courseRegistrations;
+    }
+
+    public function addCourseRegistration(CourseRegistration $courseRegistration): self
+    {
+        if (!$this->courseRegistrations->contains($courseRegistration)) {
+            $this->courseRegistrations[] = $courseRegistration;
+            $courseRegistration->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCourseRegistration(CourseRegistration $courseRegistration): self
+    {
+        if ($this->courseRegistrations->removeElement($courseRegistration)) {
+            // set the owning side to null (unless already changed)
+            if ($courseRegistration->getCourse() === $this) {
+                $courseRegistration->setCourse(null);
+            }
+        }
 
         return $this;
     }

@@ -5,12 +5,13 @@ namespace App\Entity;
 use App\Interfaces\EntityInterface;
 use App\Repository\CourseRegistrationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CourseRegistrationRepository::class)
  */
-class CourseRegistration implements EntityInterface
+class CourseRegistration implements EntityInterface, JsonSerializable
 {
     /**
      * @ORM\Id
@@ -26,22 +27,24 @@ class CourseRegistration implements EntityInterface
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Course", inversedBy="CourseRegistrations")
-     * @Assert\NotNull()
-     */
-    private $course;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Student", inversedBy="CourseRegistrations")
+     * @ORM\ManyToOne(targetEntity=Student::class, inversedBy="CourseRegistrations")
+     * @ORM\JoinColumn(nullable=false)
      * @Assert\NotNull()
      */
     private $student;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="CourseRegistrations")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="CourseRegistrations")
+     * @ORM\JoinColumn(nullable=false)
      * @Assert\NotNull()
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Course::class, inversedBy="CourseRegistrations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $course;
 
     public function getId(): ?int
     {
@@ -60,39 +63,50 @@ class CourseRegistration implements EntityInterface
         return $this;
     }
 
-    public function getCourseId(): ?int
+    public function getStudent(): ?Course
     {
-        return $this->course_id;
+        return $this->student;
     }
 
-    public function setCourseId(int $course_id): self
+    public function setStudent(?Student $student): self
     {
-        $this->course_id = $course_id;
+        $this->student = $student;
 
         return $this;
     }
 
-    public function getStudentId(): ?int
+    public function getUser(): ?User
     {
-        return $this->student_id;
+        return $this->user;
     }
 
-    public function setStudentId(int $student_id): self
+    public function setUser(?User $user): self
     {
-        $this->student_id = $student_id;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getCourse(): ?Course
     {
-        return $this->user_id;
+        return $this->course;
     }
 
-    public function setUserId(int $user_id): self
+    public function setCourse(?Course $course): self
     {
-        $this->user_id = $user_id;
+        $this->course = $course;
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return  [
+            'id' => $this->getId(),
+            'date' => $this->getDate(),
+            'student' => $this->getStudent(),
+            'user' => $this->getUser(),
+            'course' => $this->getCourse()
+        ];
     }
 }
