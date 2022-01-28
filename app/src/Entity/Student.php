@@ -5,12 +5,13 @@ namespace App\Entity;
 use App\Interfaces\EntityInterface;
 use App\Repository\StudentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=StudentRepository::class)
  */
-class Student implements EntityInterface
+class Student implements EntityInterface, JsonSerializable
 {
     /**
      * @ORM\Id
@@ -94,5 +95,16 @@ class Student implements EntityInterface
         $this->status = $status;
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return  [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'email' => $this->getEmail(),
+            'birthday' => $this->getBirthday(),
+            'status' => $this->getStatus()
+        ];
     }
 }
