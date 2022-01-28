@@ -23,16 +23,25 @@ class LoginController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/test", name="test", methods={"GET"})
+     */
+    public function test(): Response{
+        die('aqui');
+    }
+
+    /**
+     * @Route("/login", name="login", methods={"POST"})
      */
     public function index(Request $request): Response
     {
+        echo var_dump('teste');
+        die();
 
         $data = json_decode($request->getContent());
 
-        if (is_null($data->email) || is_null($data->password)) {
+        if(!property_exists($data, 'email') || !property_exists($data, 'password')){
             return new JsonResponse([
-                'error' => ''
+                'error' => 'Bad Request'
             ], Response::HTTP_BAD_REQUEST);
         }
 

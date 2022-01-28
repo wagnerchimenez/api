@@ -1,21 +1,45 @@
-version: '3'
+version: '3.7'
 
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-13}-alpine
+  php-apache:
+    ports:
+      - 8090:80
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
-      POSTGRES_USER: ${POSTGRES_USER:-symfony}
+      - APACHE_DOCUMENT_ROOT=/var/www/html/app/
+      - APACHE_LOG_DIR=/var/www/html/app/var/log
+    build: .
     volumes:
-      - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      - ./:/var/www/html
+      - ./config/vhost.conf:/etc/apache2/sites-available/-default.conf
+      - ./app/var/cache:/var/www/html/app/var/cache
+      - ./app/var/log:/var/www/html/app/var/log
+      - ./app/vendor:/var/www/html/app/vendor
+      - ./app/.env:/var/www/html/app/.env
+    networks:
+        - app-network
 
-volumes:
-###> doctrine/doctrine-bundle ###
-  db-data:
-###< doctrine/doctrine-bundle ###
+  app-mysql:
+      image: mysql
+      volumes:
+        - ./docker/volumes/mysql:/var/lib/mysql
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      environment:
+        MYSQL_DATABASE: api
+        MYSQL_ROOT_PASSWORD: 'root'
+      ports:
+        - 3308:3306
+      networks:
+        - app-network
+
+  app-adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
