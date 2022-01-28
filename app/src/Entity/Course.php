@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use App\Interfaces\EntityInterface;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CourseRepository::class)
  */
-class Course implements EntityInterface
+class Course implements EntityInterface, JsonSerializable
 {
     /**
      * @ORM\Id
@@ -93,5 +94,16 @@ class Course implements EntityInterface
         $this->end_date = $end_date;
 
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return  [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'start_date' => $this->getStartDate(),
+            'end_date' => $this->getEndDate()
+        ];
     }
 }
