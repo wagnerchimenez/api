@@ -5,18 +5,14 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UserController extends AbstractController
+class UserController extends BaseController
 {
-
-    private EntityManagerInterface $entityManager;
-    private UserRepository $userRepository;
     private UserPasswordHasherInterface $hasher;
 
     public function __construct(
@@ -25,19 +21,20 @@ class UserController extends AbstractController
         UserPasswordHasherInterface $hasher
     )
     {
-        $this->entityManager = $entityManager;
-        $this->userRepository = $userRepository;
+        parent::__construct(
+            $entityManager,
+            $userRepository
+        );
+
         $this->hasher = $hasher;
     }
 
     /**
      * @Route("/users", methods={"GET"})
      */
-    public function listUsers(): Response
+    public function listUsers(Request $request): Response
     {
-        $users = $this->userRepository->findAll();
-
-        return new JsonResponse($users, Response::HTTP_OK);
+        return $this->listAll($request);
     }
 
     /**
@@ -45,15 +42,8 @@ class UserController extends AbstractController
      */
     public function listUser(int $id): Response
     {
-        $user = $this->userRepository->find($id);
-
-        if($user === null){
-            return new JsonResponse([],Response::HTTP_NOT_FOUND);
-        }
-
-        return new JsonResponse($user, Response::HTTP_OK);
+        return $this->listOne($id);
     }
-
 
     /**
      * @Route("/users", methods={"POST"})
@@ -66,12 +56,9 @@ class UserController extends AbstractController
         $user->setName($data->name);
         $user->setEmail($data->email);
         $user->setRoles($data->roles);
-        $user->setPassword($this->hasher->hashPassword($data->password));
+        $user->setPassword($this->hasher->hashPassword($user,$data->password));
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        return new JsonResponse($user, Response::HTTP_CREATED);
+        return $this->createRecord($user);
     }
 
     /**
@@ -81,7 +68,7 @@ class UserController extends AbstractController
     {
         $data = json_decode($request->getContent());
 
-        $userStored = $this->userRepository->find($id);
+        $userStored = $this->repository->find($id);
 
         if($userStored === null){
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
@@ -90,11 +77,9 @@ class UserController extends AbstractController
         $userStored->setName($data->name);
         $userStored->setEmail($data->email);
         $userStored->setRoles($data->roles);
-        $userStored->setPassword($this->hasher->hashPassword($data->password));
+        $userStored->setPassword($this->hasher->hashPassword($userStored, $data->password));
 
-        $this->entityManager->flush();
-
-        return new JsonResponse($userStored, Response::HTTP_OK);
+        return $this->updateRecord($userStored);
     }
 
     /**
@@ -102,15 +87,6 @@ class UserController extends AbstractController
      */
     public function delete($id): Response
     {
-        $user = $this->userRepository->find($id);
-
-        if($user === null){
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
-        }
-
-        $this->entityManager->remove($user);
-        $this->entityManager->flush();
-
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return $this->deleteRecord($id);
     }
 }
