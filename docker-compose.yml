@@ -3,6 +3,7 @@ version: '3.7'
 services:
 
   php-apache:
+    container_name: api-php-symfony
     ports:
       - 8090:80
     environment:

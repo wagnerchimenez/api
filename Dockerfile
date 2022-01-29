@@ -14,6 +14,4 @@ COPY . /var/www/html
 
 COPY ./config/php.ini /usr/local/etc/php
 
-WORKDIR /var/www/html/app
-
-RUN composer install
+WORKDIR /var/www/html/app    

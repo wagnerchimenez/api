@@ -1,12 +1,13 @@
-build:
-	docker-compose down
-	docker-compose up -d
-
-db:
-	cd app && php bin/console doctrine:database:drop --force
-
 up:
-	cd app && php bin/console doctrine:database:create
-	cd app && php bin/console doctrine:migrations:diff
-	cd app && php bin/console doctrine:migrations:migrate
-	
+	docker-compose build --no-cache
+	docker-compose up -d --force-recreate
+
+down:
+	docker-compose down
+
+clear:
+	sudo rm -R docker
+
+container:
+	docker exec -it api-php-symfony bash
+	make up

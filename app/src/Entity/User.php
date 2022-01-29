@@ -47,6 +47,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
+
 
     public function getId(): ?int
     {
@@ -149,6 +154,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
     public function jsonSerialize(): mixed
     {
         return  [
@@ -156,7 +173,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
                 'name' => $this->getName(),
                 'email' => $this->getEmail(),
                 'roles' => $this->getRoles(),
-                'password' => $this->getPassword()
+                'password' => $this->getPassword(),
+                'status' => $this->getStatus()
         ];
     }
 }

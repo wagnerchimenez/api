@@ -14,6 +14,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CourseRegistrationController extends BaseController
 {
+    public const MAX_STUDENTS_PER_COURSE = 10;
+    public const ACCEPTABLE_AGE = 16;
+    public const ACCEPT_INACTIVE_STUDENTS = false;
+
     private CourseRepository $couseRepository;
 
     public function __construct(
@@ -59,10 +63,23 @@ class CourseRegistrationController extends BaseController
             return new JsonResponse([],Response::HTTP_BAD_REQUEST);
         }
 
+        
+
         $student = $this->studentRepository->find($data->student_id);
 
         if ($student === null) {
             return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+        }
+
+        if($student->getStatus() === false){
+            return new JsonResponse([], Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $birthday = DateTimeImmutable::createFromFormat('Y-m-d', $student->getBirthday());
+        $diff= $birthday->diff(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
+
+        if($diff->y <= 16){
+            return new JsonResponse([], Response::HTTP_NOT_ACCEPTABLE);
         }
 
         $user = $this->userRepository->find($data->user_id);

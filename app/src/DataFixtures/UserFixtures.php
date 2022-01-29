@@ -2,21 +2,29 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
+use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 class UserFixtures extends Fixture
-{
+{    
     public function load(ObjectManager $manager): void
     {
         // $product = new Product();
         // $manager->persist($product);
-        $user = new User();
-        $user->setEmail('wagnerllchimenez.comp@gmail.com')
-            ->setPassword('$2y$13$E0eI7f1RuiXyrfuUwlWX1embB9rB2R81zEbWufl6zZJ0PSMYNSsQK');
 
-        $manager->persist($user);
+        for($i = 0; $i < 30; $i++){
+
+            $user = UserFactory::create(
+                'Username ' . $i,
+                'user_email_' . $i . '@gmail.com',
+                '123456',
+                true
+            );
+            
+            $manager->persist($user);
+        }
+
         $manager->flush();
     }
 }
