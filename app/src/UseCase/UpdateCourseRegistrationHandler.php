@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\UseCase;
 
 use App\Entity\CourseRegistration;
-use App\Factory\CourseRegistrationFactory;
 use App\Repository\CourseRegistrationRepository;
 use App\Repository\CourseRepository;
 use App\Repository\StudentRepository;

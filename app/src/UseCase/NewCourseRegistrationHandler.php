@@ -2,11 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\UseCase;
 
 use App\Entity\CourseRegistration;
+use App\Exceptions\CourseInProgressOrClosedException;
 use App\Exceptions\CourseNotFoundException;
+use App\Exceptions\CourseRegistrationMaxLimitException;
+use App\Exceptions\StudentInactiveException;
+use App\Exceptions\StudentNotFoundException;
+use App\Exceptions\StudentUnder16Exception;
+use App\Exceptions\UserNotFoundException;
 use App\Factory\CourseRegistrationFactory;
+use App\Interfaces\CourseRegistrationInterfaceRepository;
 use App\Repository\CourseRegistrationRepository;
 use App\Repository\CourseRepository;
 use App\Repository\StudentRepository;
@@ -22,7 +29,7 @@ class NewCourseRegistrationHandler{
     private UserRepository $userRepository;
 
     public function __construct(
-        CourseRegistrationRepository $courseRegistrationRepository,
+        CourseRegistrationInterfaceRepository $courseRegistrationRepository,
         CourseRepository $courseRepository,
         StudentRepository $studentRepository,
         UserRepository $userRepository
@@ -45,11 +52,11 @@ class NewCourseRegistrationHandler{
         $student = $this->studentRepository->find($command->studentId);
 
         if ($student === null) {
-            throw new Exception('Student not found!');
+            throw new StudentNotFoundException();
         }
 
         if($student->getStatus() === false){
-            throw new Exception('Inactive student!');
+            throw new StudentInactiveException();
         }
 
         $studentAlreadyRegisteredInCourse = $this->courseRegistrationRepository->studentAlreadyRegisteredInCourse($student->getId(), $course->getId());
@@ -63,13 +70,13 @@ class NewCourseRegistrationHandler{
         $under16 = $birthday->diff($today)->y < 16 ? true : false;
 
         if($under16){
-            throw new Exception('Student under 16!');
+            throw new StudentUnder16Exception();
         }
 
         $user = $this->userRepository->find($command->userId);
 
         if ($user === null) {
-            throw new Exception('User not found!');
+            throw new UserNotFoundException();
         }
 
         $courseInProgressOrClosed = $this->courseRegistrationRepository->courseInProgressOrClosed(
@@ -78,13 +85,13 @@ class NewCourseRegistrationHandler{
         );
 
         if($courseInProgressOrClosed){
-            throw new Exception('Course in progress or closed!');
+            throw new CourseInProgressOrClosedException();
         }
 
         $totalStudentsInCourse = $this->courseRegistrationRepository->totalStudentsInCourse($course->getId());
 
         if ($totalStudentsInCourse >= 10) {
-            throw new Exception('Limit max 10 students!');
+            throw new CourseRegistrationMaxLimitException();
         }
 
         $courseRegistration = CourseRegistrationFactory::create(
