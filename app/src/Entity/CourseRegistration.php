@@ -63,7 +63,7 @@ class CourseRegistration implements EntityInterface, JsonSerializable
         return $this;
     }
 
-    public function getStudent(): ?Course
+    public function getStudent(): ?Student
     {
         return $this->student;
     }

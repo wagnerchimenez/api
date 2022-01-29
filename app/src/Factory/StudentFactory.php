@@ -7,6 +7,7 @@ namespace App\Factory;
 use App\Entity\Course;
 use App\Entity\Student;
 use DateTimeImmutable;
+use Exception;
 
 class StudentFactory{
 
@@ -34,6 +35,13 @@ class StudentFactory{
         DateTimeImmutable $birthday,
         bool $status
     ) : Student{
+
+        $today = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
+        $age = $birthday->diff($today)->y;
+
+        if($age < 16){
+            throw new Exception('Sorry, under 16!');
+        }
 
         $student = new Student();
         $student->setName($name);

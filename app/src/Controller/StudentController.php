@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Student;
+use App\Factory\StudentFactory;
 use App\Repository\StudentRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 class StudentController extends BaseController
 {
@@ -45,15 +47,20 @@ class StudentController extends BaseController
      */
     public function createStudent(Request $request): Response
     {
-        $data = json_decode($request->getContent());
+        try{
+            $data = json_decode($request->getContent());
 
-        $student = new Student();
-        $student->setName($data->name);
-        $student->setEmail($data->email);
-        $student->setBirthday(DateTimeImmutable::createFromFormat('Y-m-d', $data->birthday));
-        $student->setStatus($data->status);
+            $student = StudentFactory::create(
+                $data->name,
+                $data->email,
+                DateTimeImmutable::createFromFormat('Y-m-d', $data->birthday),
+                $data->status
+            );
 
-        return $this->createRecord($student);
+            return $this->createRecord($student);
+        } catch(Throwable $ex){
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

@@ -2,28 +2,38 @@
 
 namespace App\Controller;
 
-use App\Entity\CourseRegistration;
 use App\Repository\CourseRegistrationRepository;
 use App\Repository\CourseRepository;
+use App\Repository\StudentRepository;
+use App\Repository\UserRepository;
+use App\Service\NewCourseRegistration;
+use App\Service\NewCourseRegistrationHandler;
+use App\Service\UpdateCourseRegistration;
+use App\Service\UpdateCourseRegistrationHandler;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 class CourseRegistrationController extends BaseController
 {
     public const MAX_STUDENTS_PER_COURSE = 10;
-    public const ACCEPTABLE_AGE = 16;
-    public const ACCEPT_INACTIVE_STUDENTS = false;
+    public const ACTIVE_STUDENTS = true;
+    public const INACTIVE_STUDENTS = false;
 
     private CourseRepository $couseRepository;
+    private StudentRepository $studentRepository;
+    private UserRepository $userRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         CourseRegistrationRepository $courseRegistrationRepository,
-        CourseRepository $courseRepository
+        CourseRepository $courseRepository,
+        StudentRepository $studentRepository,
+        UserRepository $userRepository
     )
     {
         parent::__construct(
@@ -32,6 +42,8 @@ class CourseRegistrationController extends BaseController
         );
 
         $this->couseRepository = $courseRepository;
+        $this->studentRepository = $studentRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -55,46 +67,31 @@ class CourseRegistrationController extends BaseController
      */
     public function createCourseRegistration(Request $request): Response
     {
-        $data = json_decode($request->getContent());
+        try{
+            $data = json_decode($request->getContent());
 
-        $course = $this->couseRepository->find($data->course_id);
+            $command = new NewCourseRegistration(
+                (int) $data->course_id,
+                (int) $data->student_id,
+                (int) $data->user_id,
+                DateTimeImmutable::createFromFormat('Y-m-d', $data->date)
+            );
 
-        if ($course === null) {
-            return new JsonResponse([],Response::HTTP_BAD_REQUEST);
+            $handler = new NewCourseRegistrationHandler(
+                $this->repository,
+                $this->couseRepository,
+                $this->studentRepository,
+                $this->userRepository
+            );
+
+            $courseRegistration = $handler->handle($command);
+
+            return $this->createRecord($courseRegistration);
+
+        } catch(Throwable $ex){
+            dd($ex->getMessage());
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        
-
-        $student = $this->studentRepository->find($data->student_id);
-
-        if ($student === null) {
-            return new JsonResponse([], Response::HTTP_BAD_REQUEST);
-        }
-
-        if($student->getStatus() === false){
-            return new JsonResponse([], Response::HTTP_NOT_ACCEPTABLE);
-        }
-
-        $birthday = DateTimeImmutable::createFromFormat('Y-m-d', $student->getBirthday());
-        $diff= $birthday->diff(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
-
-        if($diff->y <= 16){
-            return new JsonResponse([], Response::HTTP_NOT_ACCEPTABLE);
-        }
-
-        $user = $this->userRepository->find($data->user_id);
-
-        if ($user === null) {
-            return new JsonResponse([], Response::HTTP_BAD_REQUEST);
-        }
-
-        $courseRegistration = new CourseRegistration();
-        $courseRegistration->setCourse($course);
-        $courseRegistration->setStudent($student);
-        $courseRegistration->setUser($user);
-        $courseRegistration->setDate(DateTimeImmutable::createFromFormat('Y-m-d', $data->date));
-
-        return $this->createRecord($courseRegistration);
     }
 
     /**
@@ -102,38 +99,30 @@ class CourseRegistrationController extends BaseController
      */
     public function updateCourseRegistration(Request $request, int $id): Response
     {
-        $data = json_decode($request->getContent());
+        try {
+            $data = json_decode($request->getContent());
 
-        $courseRegistrationStored = $this->repository->find($id);
+            $command = new UpdateCourseRegistration(
+                (int) $data->id,
+                (int) $data->course_id,
+                (int) $data->student_id,
+                (int) $data->user_id,
+                DateTimeImmutable::createFromFormat('Y-m-d', $data->date)
+            );
 
-        if($courseRegistrationStored === null){
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            $handler = new UpdateCourseRegistrationHandler(
+                $this->repository,
+                $this->couseRepository,
+                $this->studentRepository,
+                $this->userRepository
+            );
+
+            $courseRegistrationStored = $handler->handle($command);
+
+            return $this->updateRecord($courseRegistrationStored);
+        } catch (Throwable $ex) {
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        $course = $this->couseRepository->find($data->course_id);
-
-        if ($course === null) {
-            return new JsonResponse([], Response::HTTP_BAD_REQUEST);
-        }
-
-        $student = $this->studentRepository->find($data->student_id);
-
-        if ($student === null) {
-            return new JsonResponse([], Response::HTTP_BAD_REQUEST);
-        }
-
-        $user = $this->userRepository->find($data->user_id);
-
-        if ($user === null) {
-            return new JsonResponse([], Response::HTTP_BAD_REQUEST);
-        }
-
-        $courseRegistrationStored->setCourse($course);
-        $courseRegistrationStored->setStudent($student);
-        $courseRegistrationStored->setUser($user);
-        $courseRegistrationStored->setDate(DateTimeImmutable::createFromFormat('Y-m-d', $data->date));
-
-        return $this->updateRecord($courseRegistrationStored);
     }
 
     /**
@@ -143,5 +132,4 @@ class CourseRegistrationController extends BaseController
     {
         return $this->deleteRecord($id);
     }
-
 }

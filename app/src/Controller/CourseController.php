@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Course;
+use App\Factory\CourseFactory;
 use App\Repository\CourseRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,11 +48,12 @@ class CourseController extends BaseController
     {
         $data = json_decode($request->getContent());
 
-        $course = new Course();
-        $course->setTitle($data->title);
-        $course->setDescription($data->description);
-        $course->setStartDate(DateTimeImmutable::createFromFormat('Y-m-d', $data->start_date));
-        $course->setEndDate(DateTimeImmutable::createFromFormat('Y-m-d', $data->end_date));
+        $course = CourseFactory::create(
+            $data->title,
+            $data->description,
+            DateTimeImmutable::createFromFormat('Y-m-d', $data->start_date),
+            DateTimeImmutable::createFromFormat('Y-m-d', $data->end_date)
+        );
 
         return $this->createRecord($course);
     }
