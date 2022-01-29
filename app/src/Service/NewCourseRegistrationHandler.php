@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\CourseRegistration;
+use App\Exceptions\CourseNotFoundException;
 use App\Factory\CourseRegistrationFactory;
 use App\Repository\CourseRegistrationRepository;
 use App\Repository\CourseRepository;
@@ -38,7 +39,7 @@ class NewCourseRegistrationHandler{
         $course = $this->courseRepository->find($command->courseId);
 
         if($course === null){
-            throw new Exception('Course not found!');
+            throw new CourseNotFoundException();
         }
 
         $student = $this->studentRepository->find($command->studentId);
