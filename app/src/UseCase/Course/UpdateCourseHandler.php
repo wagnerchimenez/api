@@ -33,6 +33,7 @@ class UpdateCourseHandler
         $course->setTitle($command->title);
 
         $course = CourseFactory::create(
+            null,
             $command->title,
             $command->description,
             $command->startDate,

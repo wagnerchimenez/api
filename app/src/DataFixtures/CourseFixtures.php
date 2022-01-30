@@ -19,6 +19,7 @@ class CourseFixtures extends Fixture
         for ($i = 0; $i < 30; $i++) {
 
             $course = CourseFactory::create(
+                null, 
                 'Course ' . $i,
                 'Description of course',
                 DateTimeImmutable::createFromFormat('Y-m-d', '2022-03-01'),

@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Course;
 use App\Entity\CourseRegistration;
+use App\Interfaces\CourseRegistrationInterfaceRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,14 +14,14 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method CourseRegistration[]    findAll()
  * @method CourseRegistration[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CourseRegistrationRepository extends ServiceEntityRepository
+class CourseRegistrationRepository extends ServiceEntityRepository implements CourseRegistrationInterfaceRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CourseRegistration::class);
     }
 
-    public function totalStudentsInCourse($courseId) : int
+    public function totalStudentsInCourse($courseId): int
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -34,28 +36,6 @@ class CourseRegistrationRepository extends ServiceEntityRepository
         $resultSet = $stmt->executeQuery(['courseId' => $courseId]);
 
         return (int) $resultSet->fetchOne();
-    }
-
-    public function courseInProgressOrClosed($courseId, $date) : bool
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $sql = '
-            select count(*) as total
-            from course c
-            where
-            :courseId = c.id and
-            :date between c.start_date and c.end_date
-            ';
-        $stmt = $conn->prepare($sql);
-        $resultSet = $stmt->executeQuery([
-            'courseId' => $courseId,
-            'date'=> $date
-        ]);
-
-        $total = (int) $resultSet->fetchOne();
-
-        return $total > 0 ? true : false;
     }
 
     public function studentAlreadyRegisteredInCourse($studentId, $courseId): bool
@@ -76,6 +56,10 @@ class CourseRegistrationRepository extends ServiceEntityRepository
         $total = (int) $resultSet->fetchOne();
 
         return $total > 0 ? true : false;
+    }
+
+    public function save(CourseRegistration $courseRegistration): void
+    {
     }
 
     // /**

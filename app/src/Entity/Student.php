@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Interfaces\EntityInterface;
 use App\Repository\StudentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
@@ -11,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=StudentRepository::class)
  */
-class Student implements EntityInterface, JsonSerializable
+class Student implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -47,6 +46,13 @@ class Student implements EntityInterface, JsonSerializable
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getName(): ?string

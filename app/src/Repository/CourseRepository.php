@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Course;
+use App\Factory\CourseFactory;
+use App\Interfaces\CourseInterfaceRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,11 +14,25 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Course[]    findAll()
  * @method Course[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CourseRepository extends ServiceEntityRepository
+class CourseRepository extends ServiceEntityRepository implements CourseInterfaceRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Course::class);
+    }
+
+    /** @return Course[] */
+    public function listAll(): ?array
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function save(Course $course): void
+    {
+        $this->getEntityManager()->persist($course);
     }
 
     // /**

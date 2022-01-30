@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Student;
+use App\Interfaces\StudentInterfaceRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Student[]    findAll()
  * @method Student[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class StudentRepository extends ServiceEntityRepository
+class StudentRepository extends ServiceEntityRepository implements StudentInterfaceRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\Interfaces\EntityInterface;
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -14,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable, EntityInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     /**
      * @ORM\Id
@@ -56,6 +54,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getEmail(): ?string

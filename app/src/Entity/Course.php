@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Interfaces\EntityInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=CourseRepository::class)
  */
-class Course implements EntityInterface, JsonSerializable
+class Course implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -58,6 +57,13 @@ class Course implements EntityInterface, JsonSerializable
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getTitle(): ?string

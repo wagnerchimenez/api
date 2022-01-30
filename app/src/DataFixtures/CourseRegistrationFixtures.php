@@ -20,6 +20,7 @@ class CourseRegistrationFixtures extends Fixture
         // $manager->persist($product);
 
         $courseSymfony = CourseFactory::create(
+            null,
             'Symfony',
             'Symfony Api',
             DateTimeImmutable::createFromFormat('Y-m-d', '2022-03-01'),
@@ -29,6 +30,7 @@ class CourseRegistrationFixtures extends Fixture
         $manager->persist($courseSymfony);
 
         $courseDocker = CourseFactory::create(
+            null,
             'Docker',
             'Fast course of Docker',
             DateTimeImmutable::createFromFormat('Y-m-d', '2022-02-03'),

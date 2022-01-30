@@ -2,37 +2,37 @@
 
 declare(strict_types=1);
 
-namespace App\UseCase;
+namespace App\UseCase\CourseRegistration;
 
 use App\Entity\CourseRegistration;
 use App\Exceptions\CourseInProgressOrClosedException;
 use App\Exceptions\CourseNotFoundException;
+use App\Exceptions\CourseRegistrationAlreadyExistsException;
 use App\Exceptions\CourseRegistrationMaxLimitException;
 use App\Exceptions\StudentInactiveException;
 use App\Exceptions\StudentNotFoundException;
 use App\Exceptions\StudentUnder16Exception;
 use App\Exceptions\UserNotFoundException;
 use App\Factory\CourseRegistrationFactory;
+use App\Interfaces\CourseInterfaceRepository;
 use App\Interfaces\CourseRegistrationInterfaceRepository;
-use App\Repository\CourseRegistrationRepository;
-use App\Repository\CourseRepository;
-use App\Repository\StudentRepository;
-use App\Repository\UserRepository;
+use App\Interfaces\StudentInterfaceRepository;
+use App\Interfaces\UserInterfaceRepository;
 use DateTimeImmutable;
 use Exception;
 
 class NewCourseRegistrationHandler{
 
-    private CourseRegistrationRepository $courseRegistrationRepository;
-    private CourseRepository $courseRepository;
-    private StudentRepository $studentRepository;
-    private UserRepository $userRepository;
+    private CourseRegistrationInterfaceRepository $courseRegistrationRepository;
+    private CourseInterfaceRepository $courseRepository;
+    private StudentInterfaceRepository $studentRepository;
+    private UserInterfaceRepository $userRepository;
 
     public function __construct(
         CourseRegistrationInterfaceRepository $courseRegistrationRepository,
-        CourseRepository $courseRepository,
-        StudentRepository $studentRepository,
-        UserRepository $userRepository
+        CourseInterfaceRepository $courseRepository,
+        StudentInterfaceRepository $studentRepository,
+        UserInterfaceRepository $userRepository
     )
     {
         $this->courseRegistrationRepository = $courseRegistrationRepository;
@@ -43,6 +43,12 @@ class NewCourseRegistrationHandler{
 
     public function handle(NewCourseRegistration $command): CourseRegistration
     {
+        $courseRegistration = $this->courseRegistrationRepository->find($command->courseRegistrationId);
+
+        if($courseRegistration instanceof CourseRegistration){
+            throw new CourseRegistrationAlreadyExistsException();
+        }
+
         $course = $this->courseRepository->find($command->courseId);
 
         if($course === null){
@@ -79,12 +85,13 @@ class NewCourseRegistrationHandler{
             throw new UserNotFoundException();
         }
 
-        $courseInProgressOrClosed = $this->courseRegistrationRepository->courseInProgressOrClosed(
-            $course->getId(),
-            $command->date->format('Y-m-d')
-        );
+        $courseStartDate = strtotime($course->getStartDate()->format('Y-m-d'));
+        $courseEndDate = strtotime($course->getEndDate()->format('Y-m-d'));
+        $dateCompare = strtotime($command->date->format('Y-m-d'));
 
-        if($courseInProgressOrClosed){
+        if(
+            ($dateCompare >= $courseStartDate && $dateCompare <= $courseEndDate) || $dateCompare > $courseEndDate
+        ){
             throw new CourseInProgressOrClosedException();
         }
 
@@ -95,11 +102,14 @@ class NewCourseRegistrationHandler{
         }
 
         $courseRegistration = CourseRegistrationFactory::create(
+            $command->courseRegistrationId,
             $course,
             $student,
             $user,
             $command->date
         );
+
+        $this->courseRegistrationRepository->save($courseRegistration);
 
         return $courseRegistration;
     }

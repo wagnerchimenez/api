@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
@@ -14,15 +14,14 @@ class NewCourseHandler
 
     public function __construct(
         CourseInterfaceRepository $courseRepository
-    )
-    {
+    ) {
         $this->courseRepository = $courseRepository;
     }
 
-    public function handle(NewCourse $command) : Course
+    public function handle(NewCourse $command): Course
     {
-
         $course = CourseFactory::create(
+            null,
             $command->title,
             $command->description,
             $command->startDate,
@@ -32,6 +31,5 @@ class NewCourseHandler
         $this->courseRepository->save($course);
 
         return $course;
-
     }
 }

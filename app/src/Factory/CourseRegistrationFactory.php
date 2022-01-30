@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
@@ -10,20 +10,22 @@ use App\Entity\Student;
 use App\Entity\User;
 use DateTimeImmutable;
 
-class CourseRegistrationFactory{
-
+class CourseRegistrationFactory
+{
+    private ?int $id;
     private Course $course;
     private Student $student;
     private User $user;
     private DateTimeImmutable $date;
 
     private function __construct(
+        ?int $id,
         Course $course,
         Student $student,
         User $user,
         DateTimeImmutable $date
-    )
-    {
+    ) {
+        $this->id = $id;
         $this->course = $course;
         $this->student = $student;
         $this->user = $user;
@@ -31,13 +33,15 @@ class CourseRegistrationFactory{
     }
 
     public static function create(
+        ?int $id,
         Course $course,
         Student $student,
         User $user,
         DateTimeImmutable $date
-    ) : CourseRegistration{
+    ): CourseRegistration {
 
         $courseRegistration = new CourseRegistration();
+        $courseRegistration->setId($id);
         $courseRegistration->setCourse($course);
         $courseRegistration->setStudent($student);
         $courseRegistration->setUser($user);
