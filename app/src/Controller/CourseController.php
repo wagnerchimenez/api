@@ -50,9 +50,7 @@ class CourseController extends AbstractController
 
             return new JsonResponse($courses, Response::HTTP_OK);
         } catch (Throwable $ex) {
-
-            dd($ex->getMessage());
-            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -74,7 +72,7 @@ class CourseController extends AbstractController
 
             return new JsonResponse($courses, Response::HTTP_OK);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -103,7 +101,7 @@ class CourseController extends AbstractController
 
             return new JsonResponse($course, Response::HTTP_CREATED);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse([], Response::HTTP_NOT_ACCEPTABLE);
         }
     }
 
@@ -133,7 +131,7 @@ class CourseController extends AbstractController
 
             return new JsonResponse($course, Response::HTTP_CREATED);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
     }
 

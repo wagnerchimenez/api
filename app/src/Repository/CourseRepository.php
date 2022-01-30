@@ -21,15 +21,6 @@ class CourseRepository extends ServiceEntityRepository implements CourseInterfac
         parent::__construct($registry, Course::class);
     }
 
-    /** @return Course[] */
-    public function listAll(): ?array
-    {
-        return $this->createQueryBuilder('c')
-            ->orderBy('c.id', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
     public function save(Course $course): void
     {
         $this->getEntityManager()->persist($course);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\UseCase\Course;
 
 use App\Entity\Course;
+use App\Exceptions\CourseNotFoundException;
 use App\Interfaces\CourseInterfaceRepository;
 
 class ListCourseHandler
@@ -20,12 +21,16 @@ class ListCourseHandler
     /** @return Course[] */
     public function handle(ListCourse $command): array
     {
-        if ($command->courseId) {
-            return [
-                $this->courseRepository->find($command->courseId)
-            ];
+        if ($command->courseId === null) {
+            return $this->courseRepository->findAll();
         }
 
-        return $this->courseRepository->findAll();
+        $course = $this->courseRepository->find($command->courseId);
+
+        if ($course === null) {
+            throw new CourseNotFoundException();
+        }
+
+        return [$course];
     }
 }

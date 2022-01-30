@@ -20,6 +20,11 @@ class StudentRepository extends ServiceEntityRepository implements StudentInterf
         parent::__construct($registry, Student::class);
     }
 
+    public function save(Student $student): void
+    {
+        $this->getEntityManager()->persist($student);
+    }
+
     // /**
     //  * @return Student[] Returns an array of Student objects
     //  */

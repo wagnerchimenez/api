@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 declare(strict_types=1);
 
@@ -6,25 +6,26 @@ namespace App\UseCase\Student;
 
 use DateTimeImmutable;
 
-class NewStudent
+class UpdateStudent
 {
-    public ?int $studentId;
+    public int $studentId;
     public string $name;
     public string $email;
-    public DateTimeImmutable $birthDate;
+    public DateTimeImmutable $birthday;
     public bool $status;
 
     public function __construct(
         int $studentId = null,
         string $name,
         string $email,
-        DateTimeImmutable $birthDate,
+        DateTimeImmutable $birthday,
         bool $status = true
-    ) {
+    )
+    {
         $this->studentId = $studentId;
         $this->name = $name;
         $this->email = $email;
-        $this->birthDate = $birthDate;
+        $this->birthday = $birthday;
         $this->status = $status;
     }
 }

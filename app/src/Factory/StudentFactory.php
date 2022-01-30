@@ -32,7 +32,7 @@ class StudentFactory
     }
 
     public static function create(
-        int $id,
+        ?int $id,
         string $name,
         string $email,
         DateTimeImmutable $birthday,

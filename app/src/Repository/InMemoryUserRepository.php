@@ -29,5 +29,10 @@ class InMemoryUserRepository extends InMemoryAbstractRepository implements UserI
 
         return null;
     }
+
+    public function save(User $user): void
+    {
+        $this->users[] = $user;
+    }
     
 }
