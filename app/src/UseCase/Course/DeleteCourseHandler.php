@@ -6,10 +6,9 @@ namespace App\UseCase\Course;
 
 use App\Entity\Course;
 use App\Exceptions\CourseNotFoundException;
-use App\Factory\CourseFactory;
 use App\Interfaces\CourseInterfaceRepository;
 
-class UpdateCourseHandler
+class DeleteCourseHandler
 {
     private CourseInterfaceRepository $courseRepository;
 
@@ -19,18 +18,13 @@ class UpdateCourseHandler
         $this->courseRepository = $courseRepository;
     }
 
-    public function handle(UpdateCourse $command): Course
+    public function handle(DeleteCourse $command): Course
     {
         $course = $this->courseRepository->find($command->courseId);
 
         if ($course === null) {
             throw new CourseNotFoundException();
         }
-
-        $course->setTitle($command->title);
-        $course->setDescription($command->description);
-        $course->setStartDate($command->startDate);
-        $course->setEndDate($command->endDate);
 
         return $course;
     }

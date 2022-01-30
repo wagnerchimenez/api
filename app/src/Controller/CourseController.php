@@ -3,8 +3,14 @@
 namespace App\Controller;
 
 use App\Repository\CourseRepository;
+use App\UseCase\Course\DeleteCourse;
+use App\UseCase\Course\DeleteCourseHandler;
+use App\UseCase\Course\ListCourse;
+use App\UseCase\Course\ListCourseHandler;
 use App\UseCase\Course\NewCourse;
 use App\UseCase\Course\NewCourseHandler;
+use App\UseCase\Course\UpdateCourse;
+use App\UseCase\Course\UpdateCourseHandler;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,8 +39,21 @@ class CourseController extends AbstractController
      */
     public function listCourses(Request $request): Response
     {
-        //return $this->listAll($request);
-        return new JsonResponse();
+        try {
+            $command = new ListCourse();
+
+            $handler = new ListCourseHandler(
+                $this->courseRepository
+            );
+
+            $courses = $handler->handle($command);
+
+            return new JsonResponse($courses, Response::HTTP_OK);
+        } catch (Throwable $ex) {
+
+            dd($ex->getMessage());
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -42,8 +61,21 @@ class CourseController extends AbstractController
      */
     public function listCourse(int $id): Response
     {
-        //return $this->listOne($id);
-        return new JsonResponse();
+        try {
+            $command = new ListCourse(
+                $id
+            );
+
+            $handler = new ListCourseHandler(
+                $this->courseRepository
+            );
+
+            $courses = $handler->handle($command);
+
+            return new JsonResponse($courses, Response::HTTP_OK);
+        } catch (Throwable $ex) {
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -80,23 +112,29 @@ class CourseController extends AbstractController
      */
     public function updateCourse(Request $request, int $id): Response
     {
+        try {
+            $data = json_decode($request->getContent());
 
-        return new JsonResponse();
-        
-        // $data = json_decode($request->getContent());
+            $command = new UpdateCourse(
+                $id,
+                $data->title,
+                $data->description,
+                DateTimeImmutable::createFromFormat('Y-m-d', $data->start_date),
+                DateTimeImmutable::createFromFormat('Y-m-d', $data->end_date)
+            );
 
-        // $courseStored = $this->repository->find($id);
+            $handler = new UpdateCourseHandler(
+                $this->courseRepository
+            );
 
-        // if ($courseStored === null) {
-        //     return new JsonResponse([], Response::HTTP_NOT_FOUND);
-        // }
+            $course = $handler->handle($command);
 
-        // $courseStored->setTitle($data->title);
-        // $courseStored->setDescription($data->description);
-        // $courseStored->setStartDate(DateTimeImmutable::createFromFormat('Y-m-d', $data->start_date));
-        // $courseStored->setEndDate(DateTimeImmutable::createFromFormat('Y-m-d', $data->end_date));
+            $this->entityManager->flush();
 
-        // return $this->updateRecord($courseStored);
+            return new JsonResponse($course, Response::HTTP_CREATED);
+        } catch (Throwable $ex) {
+            return new JsonResponse([], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -104,7 +142,23 @@ class CourseController extends AbstractController
      */
     public function delete($id): Response
     {
-        // return $this->deleteRecord($id);
-        return new JsonResponse();
+        try {
+            $command = new DeleteCourse(
+                $id
+            );
+
+            $handler = new DeleteCourseHandler(
+                $this->courseRepository
+            );
+
+            $course = $handler->handle($command);
+
+            $this->entityManager->remove($course);            
+            $this->entityManager->flush();
+
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        } catch (Throwable $ex) {
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+        }
     }
 }
