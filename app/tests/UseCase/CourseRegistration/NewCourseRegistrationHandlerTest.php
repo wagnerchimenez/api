@@ -6,6 +6,8 @@ namespace Tests\UseCase\CourseRegistration;
 
 use App\Entity\CourseRegistration;
 use App\Exceptions\CourseInProgressOrClosedException;
+use App\Exceptions\CourseRegistrationMaxLimitException;
+use App\Exceptions\StudentInactiveException;
 use App\Factory\CourseFactory;
 use App\Factory\StudentFactory;
 use App\Factory\UserFactory;
@@ -216,6 +218,128 @@ class NewCourseRegistrationHandlerTest extends TestCase
             1,
             1,
             DateTimeImmutable::createFromFormat('Y-m-d', '2022-01-15')
+        );
+
+        $handler = new NewCourseRegistrationHandler(
+            $courseRegistrationRepository,
+            $courseRepository,
+            $studentRepository,
+            $userRepository
+        );
+
+        $handler->handle($command);
+    }
+
+    public function testShouldNotMatriculateStudentInactive(): void
+    {
+        $this->expectException(StudentInactiveException::class);
+
+        $courseRegistrationRepository = new InMemoryCourseRegistrationRepository();
+
+        $course = CourseFactory::create(
+            1,
+            'Course 1',
+            'description of course',
+            DateTimeImmutable::createFromFormat('Y-m-d', '2022-01-01'),
+            DateTimeImmutable::createFromFormat('Y-m-d', '2022-02-02'),
+        );
+
+        $courseRepository = new InMemoryCourseRepository([
+            $course
+        ]);
+
+        $student = StudentFactory::create(
+            1,
+            'name',
+            'email',
+            DateTimeImmutable::createFromFormat('Y-m-d', '1988-08-05'),
+            false
+        );
+
+        $studentRepository = new InMemoryStudentRepository([
+            $student
+        ]);
+
+        $user = UserFactory::create(
+            1,
+            'name',
+            'email',
+            'password',
+            true
+        );
+
+        $userRepository = new InMemoryUserRepository([
+            $user
+        ]);
+
+        $command = new NewCourseRegistration(
+            1,
+            1,
+            1,
+            1,
+            DateTimeImmutable::createFromFormat('Y-m-d', '2021-12-29')
+        );
+
+        $handler = new NewCourseRegistrationHandler(
+            $courseRegistrationRepository,
+            $courseRepository,
+            $studentRepository,
+            $userRepository
+        );
+
+        $handler->handle($command);
+    }
+
+    public function testShouldNotMatriculateMoreThan10StudentsByCourse(): void
+    {
+        $this->expectException(CourseRegistrationMaxLimitException::class);
+
+        $courseRegistrationRepository = $this->createMock(InMemoryCourseRegistrationRepository::class);
+        $courseRegistrationRepository->method('totalStudentsInCourse')
+            ->willReturn(10);
+
+        $course = CourseFactory::create(
+            1,
+            'Course 1',
+            'description of course',
+            DateTimeImmutable::createFromFormat('Y-m-d', '2022-01-01'),
+            DateTimeImmutable::createFromFormat('Y-m-d', '2022-02-02'),
+        );
+
+        $courseRepository = new InMemoryCourseRepository([
+            $course
+        ]);
+
+        $student = StudentFactory::create(
+            1,
+            'name',
+            'email',
+            DateTimeImmutable::createFromFormat('Y-m-d', '1988-08-05'),
+            true
+        );
+
+        $studentRepository = new InMemoryStudentRepository([
+            $student
+        ]);
+
+        $user = UserFactory::create(
+            1,
+            'name',
+            'email',
+            'password',
+            true
+        );
+
+        $userRepository = new InMemoryUserRepository([
+            $user
+        ]);
+
+        $command = new NewCourseRegistration(
+            1,
+            1,
+            1,
+            1,
+            DateTimeImmutable::createFromFormat('Y-m-d', '2021-12-29')
         );
 
         $handler = new NewCourseRegistrationHandler(

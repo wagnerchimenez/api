@@ -30,6 +30,11 @@ class InMemoryStudentRepository extends InMemoryAbstractRepository implements St
         return null;
     }
 
+    public function findAll()
+    {
+        return $this->students;
+    }
+
     public function save(Student $student): void
     {
         $this->students[] = $student;
