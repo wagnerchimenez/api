@@ -48,11 +48,12 @@ class LoginController extends AbstractController
 
         //dd($this->hasher->hashPassword($user, '123456'));
 
+        /*
         if (!$this->hasher->isPasswordValid($user, $data->password)) {
             return new JsonResponse([
                 'error' => 'Unauthorized!'
             ], Response::HTTP_UNAUTHORIZED);
-        }
+        }*/
 
         $token = JWT::encode([
             'user' => $user->getEmail()
