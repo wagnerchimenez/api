@@ -6,3 +6,9 @@ environment:
 container:
 	docker exec -it api-php-symfony bash
 	make up
+
+up:
+	docker-compose up -d 
+
+down: 
+	docker-compose down

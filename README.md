@@ -44,9 +44,6 @@ Toda requisição exceto ```/login``` será necessário incluir no header
 
 ![jwt](./docs/JWT.png)
 
-
-
-
 # Adminer
 
 ![adminer login](./docs/adminer.png)
@@ -56,6 +53,10 @@ Para acessar informe os seguintes dados:
 - **Usuário:** root
 - **Senha:** root
 - **Base de dados:** api
+
+# Executando aplicação
+
+Depois de tudo configurado basta no diretório raiz executar o comando ``` make up ``` para iniciar a aplicação ou ``` make down ``` para parar a aplicação
 
 # Help
 
