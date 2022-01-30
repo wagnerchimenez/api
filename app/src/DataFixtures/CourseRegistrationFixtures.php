@@ -40,6 +40,7 @@ class CourseRegistrationFixtures extends Fixture
         $manager->persist($courseDocker);
 
         $student = StudentFactory::create(
+            null,
             'Wagner Lima Chimenez',
             'wagnerllchimenez.comp@gmail.com',
             DateTimeImmutable::createFromFormat('Y-m-d', '1988-08-05'),
@@ -49,6 +50,7 @@ class CourseRegistrationFixtures extends Fixture
         $manager->persist($student);
 
         $user = UserFactory::create(
+            null,
             'Name of user admin',
             'useremail@gmail.com',
             '123456',
@@ -58,6 +60,7 @@ class CourseRegistrationFixtures extends Fixture
         $manager->persist($user);
 
         $courseRegistration1 = CourseRegistrationFactory::create(
+            null,
             $courseSymfony,
             $student,
             $user,
@@ -67,6 +70,7 @@ class CourseRegistrationFixtures extends Fixture
         $manager->persist($courseRegistration1);
 
         $courseRegistration2 = CourseRegistrationFactory::create(
+            null,
             $courseDocker,
             $student,
             $user,

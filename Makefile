@@ -1,17 +1,13 @@
-up-force:
-	docker-compose build --no-cache
-	docker-compose up -d --force-recreate
-
-up: 
+environment:
+	yes | docker system prune -a -f
 	docker-compose build
-	docker-compose up -d
-
-down:
-	docker-compose down
-
-clear:
-	sudo rm -R docker
+	docker-compose up -d --force-recreate
+	mkdir -p app/migrations
 
 container:
 	docker exec -it api-php-symfony bash
 	make up
+
+reset:
+	sudo rm -R docker
+	sudo rm -R migrations

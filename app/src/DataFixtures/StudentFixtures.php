@@ -18,6 +18,7 @@ class StudentFixtures extends Fixture
         for ($i = 0; $i < 30; $i++) {
 
             $student = StudentFactory::create(
+                null,
                 'Student name ' . $i,
                 'student_email_' . $i . '@gmail.com',
                 DateTimeImmutable::createFromFormat('Y-m-d', '1988-08-05'),
