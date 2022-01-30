@@ -8,4 +8,8 @@ use Exception;
 
 class CourseRegistrationAlreadyExistsException extends Exception
 {
+    public function __construct()
+    {
+        parent::__construct('Course Registration Already Exists!');
+    }
 }

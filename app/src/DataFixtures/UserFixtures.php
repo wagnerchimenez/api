@@ -16,6 +16,7 @@ class UserFixtures extends Fixture
         for($i = 0; $i < 30; $i++){
 
             $user = UserFactory::create(
+                null,
                 'Username ' . $i,
                 'user_email_' . $i . '@gmail.com',
                 '123456',

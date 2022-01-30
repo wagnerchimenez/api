@@ -8,4 +8,8 @@ use Exception;
 
 class CourseRegistrationNotFoundException extends Exception
 {
+    public function __construct()
+    {
+        parent::__construct('Course Registration not found!');
+    }
 }

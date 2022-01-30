@@ -51,7 +51,9 @@ class StudentController extends AbstractController
 
             return new JsonResponse($students, Response::HTTP_OK);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -73,7 +75,9 @@ class StudentController extends AbstractController
 
             return new JsonResponse($students, Response::HTTP_OK);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -103,7 +107,9 @@ class StudentController extends AbstractController
 
             return new JsonResponse($student, Response::HTTP_CREATED);
         } catch (Exception $ex) {
-            return new JsonResponse([], Response::HTTP_NOT_ACCEPTABLE);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
     }
 
@@ -133,7 +139,9 @@ class StudentController extends AbstractController
 
             return new JsonResponse($student, Response::HTTP_CREATED);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -158,7 +166,9 @@ class StudentController extends AbstractController
 
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 }

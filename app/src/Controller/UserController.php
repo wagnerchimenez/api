@@ -11,7 +11,6 @@ use App\UseCase\User\NewUser;
 use App\UseCase\User\NewUserHandler;
 use App\UseCase\User\UpdateUser;
 use App\UseCase\User\UpdateUserHandler;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,7 +49,9 @@ class UserController extends AbstractController
 
             return new JsonResponse($users, Response::HTTP_OK);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -72,7 +73,9 @@ class UserController extends AbstractController
 
             return new JsonResponse($users, Response::HTTP_OK);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -101,7 +104,9 @@ class UserController extends AbstractController
 
             return new JsonResponse($user, Response::HTTP_CREATED);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_NOT_ACCEPTABLE);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_ACCEPTABLE);
         }
     }
 
@@ -131,8 +136,9 @@ class UserController extends AbstractController
 
             return new JsonResponse($user, Response::HTTP_CREATED);
         } catch (Throwable $ex) {
-            dd($ex->getMessage());
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -157,7 +163,9 @@ class UserController extends AbstractController
 
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
         } catch (Throwable $ex) {
-            return new JsonResponse([], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([
+                'error' => $ex->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 }

@@ -9,6 +9,7 @@ use App\Exceptions\CourseInProgressOrClosedException;
 use App\Exceptions\CourseNotFoundException;
 use App\Exceptions\CourseRegistrationMaxLimitException;
 use App\Exceptions\CourseRegistrationNotFoundException;
+use App\Exceptions\StudentAlreadyRegisterInCourseException;
 use App\Exceptions\StudentInactiveException;
 use App\Exceptions\StudentNotFoundException;
 use App\Exceptions\StudentUnder16Exception;
@@ -67,7 +68,7 @@ class UpdateCourseRegistrationHandler
         $studentAlreadyRegisteredInCourse = $this->courseRegistrationRepository->studentAlreadyRegisteredInCourse($student->getId(), $course->getId());
 
         if ($studentAlreadyRegisteredInCourse) {
-            throw new Exception('Student Already Registered in Course ' . $course->getTitle() . '!');
+            throw new StudentAlreadyRegisterInCourseException();
         }
 
         $birthday = $student->getBirthday();

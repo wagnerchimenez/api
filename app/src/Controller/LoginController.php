@@ -34,9 +34,6 @@ class LoginController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        echo var_dump('teste');
-        die();
-
         $data = json_decode($request->getContent());
 
         if(!property_exists($data, 'email') || !property_exists($data, 'password')){

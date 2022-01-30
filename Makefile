@@ -9,5 +9,5 @@ container:
 	make up
 
 reset:
-	sudo rm -R docker
 	sudo rm -R migrations
+	sudo rm -R docker

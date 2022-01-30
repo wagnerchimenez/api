@@ -20,6 +20,18 @@ Dentro do container da aplicacao execute ``` make up ```. Ele irá baixar a depe
 ![migrations](./docs/migrations.png)
 ![populate](./docs/populate.png)
 
+# Executando testes unitários
+
+Acesse o container da aplicação com ```make container``` e execute ```make test```
+
+# Collection Postman
+
+No diretório raiz na pasta ```docs``` tem um arquivo de collections ```API.postman_collection``` para utilização da api.
+
+Basta que seja importada no postman e terá acesso as seguintes rotas:
+
+![routes](./docs/routes.png)
+
 # Adminer
 
 ![adminer login](./docs/adminer.png)
@@ -29,17 +41,3 @@ Para acessar informe os seguintes dados:
 - **Usuário:** root
 - **Senha:** root
 - **Base de dados:** api
-
-
-
-
-- Em seguida execute o comando:
-
-```
-make container
-```
-Você estará dentro do container da aplicação e para que as dependências do projeto sejam instaladas e migrations sejam executadas execute o comando:
-
-```
-make up
-```

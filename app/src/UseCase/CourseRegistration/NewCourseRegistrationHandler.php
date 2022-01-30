@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
@@ -9,6 +9,7 @@ use App\Exceptions\CourseInProgressOrClosedException;
 use App\Exceptions\CourseNotFoundException;
 use App\Exceptions\CourseRegistrationAlreadyExistsException;
 use App\Exceptions\CourseRegistrationMaxLimitException;
+use App\Exceptions\StudentAlreadyRegisterInCourseException;
 use App\Exceptions\StudentInactiveException;
 use App\Exceptions\StudentNotFoundException;
 use App\Exceptions\StudentUnder16Exception;
@@ -21,7 +22,8 @@ use App\Interfaces\UserInterfaceRepository;
 use DateTimeImmutable;
 use Exception;
 
-class NewCourseRegistrationHandler{
+class NewCourseRegistrationHandler
+{
 
     private CourseRegistrationInterfaceRepository $courseRegistrationRepository;
     private CourseInterfaceRepository $courseRepository;
@@ -33,8 +35,7 @@ class NewCourseRegistrationHandler{
         CourseInterfaceRepository $courseRepository,
         StudentInterfaceRepository $studentRepository,
         UserInterfaceRepository $userRepository
-    )
-    {
+    ) {
         $this->courseRegistrationRepository = $courseRegistrationRepository;
         $this->courseRepository = $courseRepository;
         $this->studentRepository = $studentRepository;
@@ -45,7 +46,7 @@ class NewCourseRegistrationHandler{
     {
         $course = $this->courseRepository->find($command->courseId);
 
-        if($course === null){
+        if ($course === null) {
             throw new CourseNotFoundException();
         }
 
@@ -55,21 +56,21 @@ class NewCourseRegistrationHandler{
             throw new StudentNotFoundException();
         }
 
-        if($student->getStatus() === false){
+        if ($student->getStatus() === false) {
             throw new StudentInactiveException();
         }
 
         $studentAlreadyRegisteredInCourse = $this->courseRegistrationRepository->studentAlreadyRegisteredInCourse($student->getId(), $course->getId());
 
-        if($studentAlreadyRegisteredInCourse){
-            throw new Exception('Student Already Registered in Course ' . $course->getTitle() . '!');
+        if ($studentAlreadyRegisteredInCourse) {
+            throw new StudentAlreadyRegisterInCourseException();
         }
 
         $birthday = $student->getBirthday();
         $today = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
         $under16 = $birthday->diff($today)->y < 16 ? true : false;
 
-        if($under16){
+        if ($under16) {
             throw new StudentUnder16Exception();
         }
 
@@ -83,9 +84,9 @@ class NewCourseRegistrationHandler{
         $courseEndDate = strtotime($course->getEndDate()->format('Y-m-d'));
         $dateCompare = strtotime($command->date->format('Y-m-d'));
 
-        if(
+        if (
             ($dateCompare >= $courseStartDate && $dateCompare <= $courseEndDate) || $dateCompare > $courseEndDate
-        ){
+        ) {
             throw new CourseInProgressOrClosedException();
         }
 
@@ -95,7 +96,7 @@ class NewCourseRegistrationHandler{
             throw new CourseRegistrationMaxLimitException();
         }
 
-        
+
 
         $courseRegistration = CourseRegistrationFactory::create(
             $command->courseRegistrationId,
