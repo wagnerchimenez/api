@@ -32,11 +32,20 @@ Basta que seja importada no postman e terá acesso as seguintes rotas:
 
 ![routes](./docs/routes.png)
 
-Obs: Toda requisição exceto ```/login``` será necessário incluir o header
+Usuário para testar
+
+![login](./docs/login.png)
+
+Será gerado um token de acesso
+
+Toda requisição exceto ```/login``` será necessário incluir no header
 
 ``` Authorization: Bearer $token ```
 
 ![jwt](./docs/JWT.png)
+
+
+
 
 # Adminer
 
@@ -47,3 +56,21 @@ Para acessar informe os seguintes dados:
 - **Usuário:** root
 - **Senha:** root
 - **Base de dados:** api
+
+# Help
+
+Caso tenha algum problema em subir o ambiente tente limpar os container e imagens do docker
+
+Alguns comandos podem te auxiliar
+
+``` 
+docker stop $(docker ps -aq)
+
+docker rm $(docker ps -aq)
+
+docker rmi $(docker images -q) --force
+```
+
+Lembre sempre de remover a pasta ``` ./docker ``` antes de subir o ambiente. Ela contém o volume do mysql, isso pode causar algum problema de permissão na hora de fazer o build.
+
+Lembre sempre de remover todas as migrations em ``` ./app/migrations ``` antes de tentar subir o ambiente.
