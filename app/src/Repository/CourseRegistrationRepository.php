@@ -60,6 +60,7 @@ class CourseRegistrationRepository extends ServiceEntityRepository implements Co
 
     public function save(CourseRegistration $courseRegistration): void
     {
+        $this->getEntityManager()->persist($courseRegistration);
     }
 
     // /**

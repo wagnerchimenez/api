@@ -1,10 +1,18 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
 namespace App\UseCase\CourseRegistration;
 
 use App\Entity\CourseRegistration;
+use App\Exceptions\CourseInProgressOrClosedException;
+use App\Exceptions\CourseNotFoundException;
+use App\Exceptions\CourseRegistrationMaxLimitException;
+use App\Exceptions\CourseRegistrationNotFoundException;
+use App\Exceptions\StudentInactiveException;
+use App\Exceptions\StudentNotFoundException;
+use App\Exceptions\StudentUnder16Exception;
+use App\Exceptions\UserNotFoundException;
 use App\Repository\CourseRegistrationRepository;
 use App\Repository\CourseRepository;
 use App\Repository\StudentRepository;
@@ -12,7 +20,8 @@ use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Exception;
 
-class UpdateCourseRegistrationHandler{
+class UpdateCourseRegistrationHandler
+{
 
     private CourseRegistrationRepository $courseRegistrationRepository;
     private CourseRepository $courseRepository;
@@ -24,8 +33,7 @@ class UpdateCourseRegistrationHandler{
         CourseRepository $courseRepository,
         StudentRepository $studentRepository,
         UserRepository $userRepository
-    )
-    {
+    ) {
         $this->courseRegistrationRepository = $courseRegistrationRepository;
         $this->courseRepository = $courseRepository;
         $this->studentRepository = $studentRepository;
@@ -34,57 +42,69 @@ class UpdateCourseRegistrationHandler{
 
     public function handle(UpdateCourseRegistration $command): CourseRegistration
     {
-        $courseRegistrationStored = $this->courseRegistrationRepository->find($command->courseRegistrationId);
+        $courseRegistration = $this->courseRegistrationRepository->find($command->courseRegistrationId);
 
-        if($courseRegistrationStored === null){
-            throw new Exception('Course register not found!');
+        if ($courseRegistration === null) {
+            throw new CourseRegistrationNotFoundException();
         }
 
-        $course = $this->courseRepository->find($command->course_id);
+        $course = $this->courseRepository->find($command->courseId);
 
-        if($course === null){
-            throw new Exception('Course not found!');
+        if ($course === null) {
+            throw new CourseNotFoundException();
         }
 
-        $student = $this->studentRepository->find($command->student_id);
+        $student = $this->studentRepository->find($command->studentId);
 
         if ($student === null) {
-            throw new Exception('Student not found!');
+            throw new StudentNotFoundException();
         }
 
-        if($student->getStatus() === false){
-            throw new Exception('Inactive student!');
+        if ($student->getStatus() === false) {
+            throw new StudentInactiveException();
+        }
+
+        $studentAlreadyRegisteredInCourse = $this->courseRegistrationRepository->studentAlreadyRegisteredInCourse($student->getId(), $course->getId());
+
+        if ($studentAlreadyRegisteredInCourse) {
+            throw new Exception('Student Already Registered in Course ' . $course->getTitle() . '!');
         }
 
         $birthday = $student->getBirthday();
         $today = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
         $under16 = $birthday->diff($today)->y < 16 ? true : false;
 
-        if($under16){
-            throw new Exception('Student under 16!');
+        if ($under16) {
+            throw new StudentUnder16Exception();
         }
 
-        $user = $this->userRepository->find($command->id);
+        $user = $this->userRepository->find($command->userId);
 
         if ($user === null) {
-            throw new Exception('User not found!');
+            throw new UserNotFoundException();
         }
 
-        $courseInProgressOrClosed = $this->courseRegistrationRepository->courseInProgressOrClosed(
-            $course->getId(),
-            $command->date->format('Y-m-d')
-        );
+        $courseStartDate = strtotime($course->getStartDate()->format('Y-m-d'));
+        $courseEndDate = strtotime($course->getEndDate()->format('Y-m-d'));
+        $dateCompare = strtotime($command->date->format('Y-m-d'));
 
-        if($courseInProgressOrClosed){
-            throw new Exception('Course in progress or closed!');
+        if (
+            ($dateCompare >= $courseStartDate && $dateCompare <= $courseEndDate) || $dateCompare > $courseEndDate
+        ) {
+            throw new CourseInProgressOrClosedException();
         }
 
         $totalStudentsInCourse = $this->courseRegistrationRepository->totalStudentsInCourse($course->getId());
 
         if ($totalStudentsInCourse >= 10) {
-            throw new Exception('Limit max 10 students!');
+            throw new CourseRegistrationMaxLimitException();
         }
 
-        return $courseRegistrationStored;
+        $courseRegistration->setCourse($course);
+        $courseRegistration->setStudent($student);
+        $courseRegistration->setUser($user);
+        $courseRegistration->setDate($command->date);
+
+        return $courseRegistration;
     }
 }

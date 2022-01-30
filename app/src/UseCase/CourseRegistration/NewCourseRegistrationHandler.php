@@ -43,12 +43,6 @@ class NewCourseRegistrationHandler{
 
     public function handle(NewCourseRegistration $command): CourseRegistration
     {
-        $courseRegistration = $this->courseRegistrationRepository->find($command->courseRegistrationId);
-
-        if($courseRegistration instanceof CourseRegistration){
-            throw new CourseRegistrationAlreadyExistsException();
-        }
-
         $course = $this->courseRepository->find($command->courseId);
 
         if($course === null){
@@ -100,6 +94,8 @@ class NewCourseRegistrationHandler{
         if ($totalStudentsInCourse >= 10) {
             throw new CourseRegistrationMaxLimitException();
         }
+
+        
 
         $courseRegistration = CourseRegistrationFactory::create(
             $command->courseRegistrationId,
