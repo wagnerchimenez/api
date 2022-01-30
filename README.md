@@ -32,6 +32,12 @@ Basta que seja importada no postman e terá acesso as seguintes rotas:
 
 ![routes](./docs/routes.png)
 
+Obs: Toda requisição exceto ```/login``` será necessário incluir o header
+
+``` Authorization: Bearer $token ```
+
+![jwt](./docs/JWT.png)
+
 # Adminer
 
 ![adminer login](./docs/adminer.png)

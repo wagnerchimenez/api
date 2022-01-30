@@ -6,13 +6,499 @@
 	},
 	"item": [
 		{
-			"name": "POST Users",
+			"name": "Courses",
+			"item": [
+				{
+					"name": "GET courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/courses/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"courses",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Courses",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"MAIS UM ADIDIONADO\",\n    \"description\": \"description teste\",\n    \"start_date\": \"2022-01-01\",\n    \"end_date\": \"2022-02-02\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/courses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Courses",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"alterado 5\",\n    \"description\": \"description 123456\",\n    \"start_date\": \"2022-02-02\",\n    \"end_date\": \"2022-02-04\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/courses/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"courses",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Courses",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/courses/38",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"courses",
+								"38"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Students",
+			"item": [
+				{
+					"name": "GET Students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/students/37",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"students",
+								"37"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Students",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Student test 123\",\n    \"email\": \"emailstudent12131@gmail.com\",\n    \"birthday\": \"1987-08-05\",\n    \"status\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/students",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Students",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Student test kkkk\",\n    \"email\": \"emailstudent@gmail.com\",\n    \"birthday\": \"2022-01-01\",\n    \"status\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/students/37",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"students",
+								"37"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Students",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/students/37",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"students",
+								"37"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CourseRegistrations",
+			"item": [
+				{
+					"name": "GET courseregistrations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/courseregistrations/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"courseregistrations",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST CourseRegistration",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoidXNlcmVtYWlsQGdtYWlsLmNvbSJ9.A7vQ3yTtzXH_ZqNwosLKdsR5DdCQkagJyMfoWn8Nhr0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"course_id\": 1,\n    \"student_id\": 5,\n    \"user_id\": 1,\n    \"date\": \"2022-02-02\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/courseregistrations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"courseregistrations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT CourseRegistration",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"course_id\": 1,\n    \"student_id\": 5,\n    \"user_id\": 1,\n    \"date\": \"2022-02-02\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/courseregistrations/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"courseregistrations",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE CourseRegistration",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NNJ9.eyJ1c2VyIjoidXNlcmVtYWlsQGdtYWlsLmNvbSJ9.A7vQ3yTtzXH_ZqNwosLKdsR5DdCQkagJyMfoWn8Nhr0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "tests",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/courseregistrations/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"courseregistrations",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GET Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"name\": \"TESTE lima chimenez\",\n        \"email\": \"teste@gmail.com\",\n        \"roles\": [\n            \"ROLE_USER\"\n        ],\n        \"password\": \"asfasw32w22\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Users",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"name\": \"Nome atualizado\",\n        \"email\": \"emailatualizado@gmail.com\",\n        \"roles\": [\n            \"ROLE_USER\"\n        ],\n        \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/users/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"users",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Users",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8090/app/public/index.php/users/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"app",
+								"public",
+								"index.php",
+								"users",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET login",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n        \"name\": \"TESTE lima chimenez\",\n        \"email\": \"teste@gmail.com\",\n        \"roles\": [\n            \"ROLE_USER\"\n        ],\n        \"password\": \"asfasw32w22\"\n}",
+					"raw": "{\n    \"email\" : \"useremail@gmail.com\",\n    \"password\": \"123456\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -20,7 +506,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/users",
+					"raw": "http://localhost:8090/app/public/index.php/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -30,357 +516,7 @@
 						"app",
 						"public",
 						"index.php",
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET Users",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/users",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PUT Users",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n        \"name\": \"Nome atualizado\",\n        \"email\": \"emailatualizado@gmail.com\",\n        \"roles\": [\n            \"ROLE_USER\"\n        ],\n        \"password\": \"123456\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/users/5",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"users",
-						"5"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DELETE Users",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/users/5",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"users",
-						"5"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET Students",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/students",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"students"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "POST Students",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Student test 123\",\n    \"email\": \"emailstudent@gmail.com\",\n    \"birthday\": \"2022-01-01\",\n    \"status\": true\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/students",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"students"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PUT Students",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Student test changed\",\n    \"email\": \"emailstudent@gmail.com\",\n    \"birthday\": \"2022-01-01\",\n    \"status\": true\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/students/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"students",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DELETE Students",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/students/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"students",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET courses",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/courses",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"courses"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "POST Courses",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"title\": \"Title teste\",\n    \"description\": \"description teste\",\n    \"start_date\": \"2022-01-01\",\n    \"end_date\": \"2022-02-02\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/courses",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"courses"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "POST Course Registration",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"title\": \"Title teste\",\n    \"description\": \"description teste\",\n    \"start_date\": \"2022-01-01\",\n    \"end_date\": \"2022-02-02\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/courses",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"courses"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PUT Courses",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"title\": \"Title 2222\",\n    \"description\": \"description teste\",\n    \"start_date\": \"2022-01-01\",\n    \"end_date\": \"2022-02-02\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/courses/2",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"courses",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DELETE Courses",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/students/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"students",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET courseregistrations",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8090/app/public/index.php/courses",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8090",
-					"path": [
-						"app",
-						"public",
-						"index.php",
-						"courses"
+						"login"
 					]
 				}
 			},
